@@ -7,6 +7,7 @@
 
 #include <string>
 #include <map>
+#include <nlohmann/json/single_include/nlohmann/json.hpp>
 #include "Client.h"
 
 class Request {
@@ -19,10 +20,20 @@ class Request {
         std::map<std::string, std::string> getHeaders();
         std::string getHeader(std::string name);
 
+        std::string get(std::string name, std::string default_value);
+        std::string get(std::string name);
+        bool has(std::string name);
+        nlohmann::json all();
+
+        static std::string urlDecode(std::string url);
+
     private:
         std::string method;
         std::string uri;
         std::map<std::string, std::string> header;
+        std::vector<std::map<std::string, std::string>> post_form_data;
+        nlohmann::json post_json;
+
 
 };
 

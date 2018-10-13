@@ -6,19 +6,21 @@
 #include <TigreFramework/Core/Kernel/HttpCore.h>
 #include <TigreFramework/Core/Kernel/Application/Bootstrap.h>
 #include <TigreFramework/Core/Kernel/Application/ServiceProvider.h>
+#include <TigreFramework/Core/Event/EventListener.h>
 #include "Application.h"
 
-Application::Application() {
+Application::Application() : Configurable(false) {
     Configuration::set("app", this);
 }
 
-Application::Application(int argc, char **argv, char **envp) : argc(argc), argv(argv), envp(envp) {
+Application::Application(int argc, char **argv, char **envp) : Configurable(false), argc(argc), argv(argv), envp(envp) {
     Configuration::set("app", this);
 }
 
 Application::~Application() {
     Configuration::dump();
     ServiceProvider::dump();
+    EventListener::Dump();
 }
 
 int Application::run() {

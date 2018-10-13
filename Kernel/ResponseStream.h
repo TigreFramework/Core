@@ -6,8 +6,9 @@
 #define TIGREFRAMEWORK_RESPONSESTREAM_H
 
 #include <string>
+#include <TigreFramework/Core/Kernel/Application/Configurable.h>
 
-class ResponseStream {
+class ResponseStream : public Configurable {
 
     public:
         virtual void write(std::string text) = 0;

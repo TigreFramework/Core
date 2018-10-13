@@ -14,6 +14,9 @@ void ServiceProvider::bootAll() {
     for(auto provider : ServiceProvider::providers){
         provider->boot();
     }
+    for(auto provider : ServiceProvider::providers){
+        provider->Register();
+    }
 }
 
 void ServiceProvider::dump() {

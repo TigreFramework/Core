@@ -6,8 +6,9 @@
 #define TIGREFRAMEWORK_ENV_H
 
 #include <string>
+#include "Configurable.h"
 
-class Env {
+class Env : public Configurable {
 
     public:
         virtual std::string get(std::string name, std::string default_value="") = 0;

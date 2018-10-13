@@ -11,7 +11,7 @@ set(SYSTEM_FILES
         Kernel/Application/Configuration.cpp
         Kernel/Application.cpp
         Kernel/Exception.cpp Kernel/Exception.h
-        Kernel/ExceptionHandler.cpp
+        Kernel/ExceptionHandler.h
         Kernel/PageNotFoundException.cpp
 
         Kernel/Router.h
@@ -20,6 +20,11 @@ set(SYSTEM_FILES
         Kernel/Application/Bootstrap.h
         Kernel/Application/Configurable.h
         Kernel/Application/Env.h
+
+        Event/Event.cpp
+        Event/EventListener.cpp
+
+        Request/Exception/ParameterNotFound.cpp
 )
 
 set(SOURCE_FILES ${SYSTEM_FILES})

@@ -5,10 +5,11 @@
 #ifndef TIGREFRAMEWORK_EXCEPTIONHANDLER_H
 #define TIGREFRAMEWORK_EXCEPTIONHANDLER_H
 
+#include <TigreFramework/Core/Kernel/Application/Configurable.h>
 #include "Response.h"
 #include "Exception.h"
 
-class ExceptionHandler {
+class ExceptionHandler : public Configurable {
 
     public:
         virtual void report(Exception &exception) = 0;

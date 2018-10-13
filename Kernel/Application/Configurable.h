@@ -7,6 +7,11 @@
 
 class Configurable {
 
+    public:
+        virtual ~Configurable() = default;
+        explicit Configurable(bool autoDump = true) : autoDump(autoDump) { };
+        bool autoDump = true;
+
 };
 
 #endif //TIGREFRAMEWORK_CONFIGURABLE_H

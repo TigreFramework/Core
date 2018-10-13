@@ -2,7 +2,11 @@
 // Created by pedrosoares on 4/28/18.
 //
 
+#include <TigreFramework/Core/Kernel/Application/Env.h>
+#include <TigreFramework/Core/Kernel/Application/Configuration.h>
+#include <TigreFramework/Apache/ApacheEnv.h>
 #include "Response.h"
+#include "HttpCore.h"
 
 Response::Response(std::string content, int code) : content(content), code(code) {
 
@@ -27,11 +31,24 @@ Response& Response::operator=(const Response &rhs) {
 }
 
 std::string Response::render() {
-    std::string header = "HTTP/1.1 "+std::to_string(this->code)+" "+this->codeToText()+"\r\n"
-                        +this->content_type+"\r\n"
-                        +"\r\n\r\n";
+    std::string header;
+    auto env = Configuration::Get<Env*>("env");
+    auto core = Configuration::Get<HttpCore*>("Http.Core");
+    try {
+        dynamic_cast<ApacheEnv *>(env);
+        header = "Status: "+std::to_string(this->code)+" "+this->codeToText()+"\r\n";
+    }catch (std::bad_cast &bad_cast){
+        header = env->get("SERVER_PROTOCOL", "HTTP/1.1")
+                 +" "+std::to_string(this->code)+" "+this->codeToText()+"\r\n";
+    }
 
-    return header+this->content;
+    auto customHeaders = core->getHeaders();
+
+    return header
+           +this->content_type+"\r\n"
+           +customHeaders
+           +(customHeaders.empty() ? "\r\n" : "")+"\r\n"
+           +this->content;
 }
 
 std::string Response::codeToText() {

@@ -5,10 +5,11 @@
 #ifndef TIGREFRAMEWORK_ROUTER_H
 #define TIGREFRAMEWORK_ROUTER_H
 
+#include <TigreFramework/Core/Kernel/Application/Configurable.h>
 #include "Request.h"
 #include "Response.h"
 
-class Router {
+class Router : public Configurable {
 
     public:
         virtual void boot() = 0;

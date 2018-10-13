@@ -13,6 +13,7 @@ class ServiceProvider {
 
     public:
         virtual void boot() = 0;
+        virtual void Register(){ };
 
         static void registerProvider(ServiceProvider* provider);
         static void bootAll();
