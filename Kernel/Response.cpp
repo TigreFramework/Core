@@ -4,9 +4,7 @@
 
 #include "Response.h"
 
-Response::Response(std::string content, int code) : content(content), code(code) {
-
-}
+Response::Response(std::string content, int code) : content(std::move(content)), code(code) { }
 
 Response::Response(nlohmann::json content) : code(200) {
     if(content.is_string()){
@@ -16,22 +14,19 @@ Response::Response(nlohmann::json content) : code(200) {
     }
 }
 
-/*Response::Response(const char *content) : content(content), code(200) {
-
-}*/
-
 Response& Response::operator=(const Response &rhs) {
     this->content = rhs.content;
     this->code = rhs.code;
     return *this;
 }
 
-std::string Response::render() {
-    std::string header = "HTTP/1.1 "+std::to_string(this->code)+" "+this->codeToText()+"\r\n"
-                        +this->content_type+"\r\n"
-                        +"\r\n\r\n";
-
-    return header+this->content;
+std::map<std::string, std::string> Response::render() {
+    return {
+        {"header", this->content_type},
+        {"body", this->content},
+        {"status", std::to_string(this->code)},
+        {"status-text", this->codeToText()}
+    };
 }
 
 std::string Response::codeToText() {

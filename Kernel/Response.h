@@ -16,10 +16,9 @@ class Response {
         explicit Response() = default;
         Response(std::string content, int code);
         Response(nlohmann::json content);
-        //Response(const char content[]);
-        std::string render();
-
+        std::map<std::string, std::string> render();
         Response& operator=(const Response& rhs);
+
 
     private:
         int code = 200;
