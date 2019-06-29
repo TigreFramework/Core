@@ -1,7 +1,3 @@
-//
-// Created by pedrosoares on 4/28/18.
-//
-
 #include "Response.h"
 
 Response::Response(std::string content, int code) : content(std::move(content)), code(code) { }

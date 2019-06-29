@@ -1,12 +1,11 @@
-//
-// Created by pedrosoares on 4/28/18.
-//
-
 #include "Configuration.h"
 
 std::map<std::string, Configurable*> Configuration::instances;
 
 Configurable* Configuration::get(const std::string &name) {
+    if(Configuration::instances.find(name) == Configuration::instances.end()) {
+        throw std::string("Not found Configuration \"")+name+"\"";
+    }
     return Configuration::instances[name];
 }
 
