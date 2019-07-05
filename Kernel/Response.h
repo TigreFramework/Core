@@ -1,7 +1,3 @@
-//
-// Created by pedrosoares on 4/28/18.
-//
-
 #ifndef TIGREFRAMEWORK_RESPONSE_H
 #define TIGREFRAMEWORK_RESPONSE_H
 
@@ -24,7 +20,6 @@ class Response {
 
     private:
         int code = 200;
-        //std::string content_type = "Content-Type: text/html; charset=UTF-8";
         std::string content;
 
         std::map<std::string, std::string> headers = {
