@@ -1,24 +1,31 @@
+#include <iostream>
 #include "Response.h"
 
 Response::Response(std::string content, int code) : content(std::move(content)), code(code) { }
 
-Response::Response(nlohmann::json content) : code(200) {
+Response::Response(nlohmann::json content, int code) : code(code) {
     if(content.is_string()){
         this->content = content;
     }else{
         this->content = content.dump();
+        this->headers["Content-Type"] = "application/json";
     }
 }
 
 Response& Response::operator=(const Response &rhs) {
     this->content = rhs.content;
     this->code = rhs.code;
+    this->headers = rhs.headers;
     return *this;
 }
 
 std::map<std::string, std::string> Response::render() {
+    std::string headers;
+    for(const auto& header : this->headers) {
+        headers += header.first + ":" + header.second + "\r\n";
+    }
     return {
-        {"header", this->content_type},
+        {"header", headers},
         {"body", this->content},
         {"status", std::to_string(this->code)},
         {"status-text", this->codeToText()}
@@ -151,4 +158,8 @@ std::string Response::codeToText() {
             return "";
 
     }
+}
+
+void Response::setHeader(std::string name, std::string value) {
+    this->headers[name] = value;
 }
