@@ -1,54 +1,35 @@
-//
-// Created by pedrosoares on 4/28/18.
-//
-
-#include <TigreFramework/Core/Kernel/Application/Env.h>
-#include <TigreFramework/Core/Kernel/Application/Configuration.h>
-#include <TigreFramework/Apache/ApacheEnv.h>
+#include <iostream>
 #include "Response.h"
-#include "HttpCore.h"
 
-Response::Response(std::string content, int code) : content(content), code(code) {
+Response::Response(std::string content, int code) : content(std::move(content)), code(code) { }
 
-}
-
-Response::Response(nlohmann::json content) : code(200) {
+Response::Response(nlohmann::json content, int code) : code(code) {
     if(content.is_string()){
         this->content = content;
     }else{
         this->content = content.dump();
+        this->headers["Content-Type"] = "application/json";
     }
 }
-
-/*Response::Response(const char *content) : content(content), code(200) {
-
-}*/
 
 Response& Response::operator=(const Response &rhs) {
     this->content = rhs.content;
     this->code = rhs.code;
+    this->headers = rhs.headers;
     return *this;
 }
 
-std::string Response::render() {
-    std::string header;
-    auto env = Configuration::Get<Env*>("env");
-    auto core = Configuration::Get<HttpCore*>("Http.Core");
-    try {
-        dynamic_cast<ApacheEnv *>(env);
-        header = "Status: "+std::to_string(this->code)+" "+this->codeToText()+"\r\n";
-    }catch (std::bad_cast &bad_cast){
-        header = env->get("SERVER_PROTOCOL", "HTTP/1.1")
-                 +" "+std::to_string(this->code)+" "+this->codeToText()+"\r\n";
+std::map<std::string, std::string> Response::render() {
+    std::string headers;
+    for(const auto& header : this->headers) {
+        headers += header.first + ":" + header.second + "\r\n";
     }
-
-    auto customHeaders = core->getHeaders();
-
-    return header
-           +this->content_type+"\r\n"
-           +customHeaders
-           +(customHeaders.empty() ? "\r\n" : "")+"\r\n"
-           +this->content;
+    return {
+        {"header", headers},
+        {"body", this->content},
+        {"status", std::to_string(this->code)},
+        {"status-text", this->codeToText()}
+    };
 }
 
 std::string Response::codeToText() {
@@ -177,4 +158,8 @@ std::string Response::codeToText() {
             return "";
 
     }
+}
+
+void Response::setHeader(std::string name, std::string value) {
+    this->headers[name] = value;
 }
